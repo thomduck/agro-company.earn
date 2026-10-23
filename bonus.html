@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="manifest" href="./manifest.json"><meta name="theme-color" content="#071a3d">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#0a0804">
+<title>Thomduck — Welcome Bonus</title>
+<link rel="icon" href="icon-2.png">
+<link rel="apple-touch-icon" href="icon-1.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070604;
+  --bg2:#100c07;
+  --gold:#d9ad35;
+  --gold-light:#f7e7a0;
+  --gold-deep:#b8891a;
+  --champagne:#f5ecd0;
+  --text:#fff8e8;
+  --muted:#b5a47a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%,rgba(232,197,71,.22),transparent 55%),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(184,137,26,.12),transparent 50%),
+    linear-gradient(165deg,var(--bg) 0%,var(--bg2) 45%,#050403 100%);
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+.aurora{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,220,120,.07),transparent 35%),
+    radial-gradient(circle at 70% 60%,rgba(232,197,71,.05),transparent 40%);
+  animation:auroraShift 12s ease-in-out infinite alternate;
+}
+@keyframes auroraShift{from{opacity:.7}to{opacity:1}}
+
+.sparkle-field{
+  position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;
+  background-image:
+    radial-gradient(1.5px 1.5px at 10% 20%,rgba(255,240,180,.9),transparent),
+    radial-gradient(1.5px 1.5px at 30% 65%,rgba(232,197,71,.7),transparent),
+    radial-gradient(1px 1px at 55% 15%,rgba(255,255,255,.8),transparent),
+    radial-gradient(1.5px 1.5px at 75% 40%,rgba(247,231,160,.85),transparent),
+    radial-gradient(1px 1px at 88% 75%,rgba(232,197,71,.6),transparent),
+    radial-gradient(1.5px 1.5px at 20% 85%,rgba(255,240,180,.75),transparent);
+  animation:twinkle 4s ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:.3}to{opacity:.65}}
+
+.vignette{
+  position:fixed;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.5) 100%);
+}
+
+/* ========== FULL-SCREEN BALLOONS ========== */
+#balloons{
+  position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:4;
+}
+.balloon{
+  position:absolute;
+  bottom:-140px;
+  width:52px;height:66px;
+  border-radius:50% 50% 48% 48%;
+  animation:balloonRise var(--dur) linear var(--delay) infinite;
+  will-change:transform,opacity;
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.25));
+}
+.balloon::before{
+  content:"";
+  position:absolute;left:50%;bottom:-9px;
+  transform:translateX(-50%);
+  border-left:6px solid transparent;
+  border-right:6px solid transparent;
+  border-top:10px solid var(--knot);
+}
+.balloon::after{
+  content:"";
+  position:absolute;left:50%;top:100%;
+  width:1.5px;height:90px;
+  background:linear-gradient(to bottom,rgba(232,197,71,.45),transparent);
+  transform:translateX(-50%);
+}
+.balloon .shine{
+  position:absolute;top:14%;left:18%;
+  width:28%;height:22%;
+  border-radius:50%;
+  background:rgba(255,255,255,.45);
+  filter:blur(1px);
+}
+@keyframes balloonRise{
+  0%{transform:translate3d(0,0,0) rotate(-6deg);opacity:0}
+  6%{opacity:1}
+  25%{transform:translate3d(12px,-28vh,0) rotate(5deg)}
+  50%{transform:translate3d(-14px,-55vh,0) rotate(-4deg)}
+  75%{transform:translate3d(10px,-82vh,0) rotate(6deg)}
+  100%{transform:translate3d(-8px,-120vh,0) rotate(-3deg);opacity:0}
+}
+
+/* Confetti burst */
+#confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:3}
+.confetti-piece{
+  position:absolute;top:-24px;
+  width:8px;height:8px;
+  background:linear-gradient(135deg,var(--gold-light),var(--gold-deep));
+  opacity:0;
+  animation:fall linear forwards;
+  border-radius:1px;
+}
+.confetti-piece.circle{border-radius:50%}
+.confetti-piece.thin{width:3px;height:12px}
+@keyframes fall{
+  0%{opacity:0;transform:translateY(0) rotate(0)}
+  10%{opacity:1}
+  100%{opacity:0;transform:translateY(110vh) rotate(720deg)}
+}
+
+/* Congrats banner flash */
+.congrats-flash{
+  position:fixed;top:12%;left:50%;
+  transform:translateX(-50%) scale(.8);
+  z-index:6;pointer-events:none;
+  padding:10px 22px;
+  border-radius:999px;
+  background:linear-gradient(135deg,rgba(232,197,71,.25),rgba(184,137,26,.2));
+  border:1px solid rgba(232,197,71,.5);
+  color:var(--gold-light);
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1rem,3.5vw,1.25rem);
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  opacity:0;
+  animation:congratsIn 1s .3s ease forwards, congratsOut 1s 4.5s ease forwards;
+  box-shadow:0 12px 40px rgba(0,0,0,.35),0 0 30px rgba(232,197,71,.2);
+}
+@keyframes congratsIn{
+  to{opacity:1;transform:translateX(-50%) scale(1)}
+}
+@keyframes congratsOut{
+  to{opacity:0;transform:translateX(-50%) translateY(-20px) scale(.95)}
+}
+
+/* Main card */
+.wrap{
+  position:relative;z-index:5;
+  min-height:100vh;
+  display:grid;place-items:center;
+  padding:28px 18px 40px;
+}
+.card{
+  width:min(460px,100%);
+  position:relative;
+  text-align:center;
+  padding:48px 32px 36px;
+  border-radius:28px;
+  background:linear-gradient(155deg,rgba(42,34,18,.94) 0%,rgba(18,14,8,.97) 55%,rgba(12,10,6,.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(232,197,71,.2),
+    0 32px 80px rgba(0,0,0,.55),
+    0 0 60px rgba(232,197,71,.08),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  animation:cardIn .9s cubic-bezier(.2,.8,.2,1) both;
+  overflow:hidden;
+}
+.card::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(145deg,rgba(247,231,160,.7),rgba(232,197,71,.15) 40%,rgba(184,137,26,.4) 70%,rgba(247,231,160,.5));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+}
+.card::after{
+  content:"";position:absolute;top:-40%;left:-20%;width:140%;height:50%;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.06) 48%,transparent 62%);
+  animation:shimmer 5s ease-in-out infinite;pointer-events:none;
+}
+@keyframes shimmer{
+  0%,100%{transform:translateX(-30%) skewX(-12deg);opacity:0}
+  40%{opacity:1}
+  70%{transform:translateX(30%) skewX(-12deg);opacity:0}
+}
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(36px) scale(.94)}
+  to{opacity:1;transform:none}
+}
+
+.seal{
+  width:112px;height:112px;margin:0 auto 22px;border-radius:50%;
+  display:grid;place-items:center;position:relative;
+  background:radial-gradient(circle at 32% 28%,#fff6c8 0%,#d9ad35 38%,#c9a02e 62%,#8f6a12 100%);
+  box-shadow:0 0 0 3px rgba(15,12,6,.9),0 0 0 5px rgba(232,197,71,.35),0 0 40px rgba(232,197,71,.45),0 12px 28px rgba(0,0,0,.35);
+  animation:sealPulse 3s ease-in-out infinite;
+}
+.seal span{font:800 2.15rem 'Playfair Display',serif;color:#1a1408;text-shadow:0 1px 0 rgba(255,255,255,.35)}
+.seal-ring{
+  position:absolute;inset:-10px;border-radius:50%;
+  border:1px dashed rgba(232,197,71,.45);
+  animation:spinSlow 28s linear infinite;
+}
+@keyframes sealPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.04);box-shadow:0 0 0 3px rgba(15,12,6,.9),0 0 0 7px rgba(232,197,71,.25),0 0 70px rgba(232,197,71,.55),0 14px 32px rgba(0,0,0,.4)}
+}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.7rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gold-light);margin-bottom:10px;
+}
+.eyebrow::before,.eyebrow::after{content:"";width:18px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
+.eyebrow::after{background:linear-gradient(90deg,var(--gold),transparent)}
+
+h1{
+  font-family:'Playfair Display',serif;font-weight:700;
+  font-size:clamp(1.85rem,5vw,2.45rem);line-height:1.15;
+  color:var(--champagne);margin:0 0 6px;
+}
+.tagline{
+  font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;
+  color:var(--muted);margin-bottom:22px;letter-spacing:.04em;
+}
+
+.amount-box{
+  position:relative;margin:8px 0 20px;padding:22px 16px 18px;border-radius:18px;
+  background:linear-gradient(180deg,rgba(232,197,71,.12),rgba(232,197,71,.03));
+  border:1px solid rgba(232,197,71,.22);
+}
+.amount-label{font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.amount{
+  font-family:'Playfair Display',serif;font-weight:800;
+  font-size:clamp(2.8rem,9vw,3.6rem);line-height:1;
+  background:linear-gradient(180deg,#fff8d0 0%,#d9ad35 45%,#c9a02e 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 28px rgba(232,197,71,.35));
+  animation:amountGlow 2.8s ease-in-out infinite;
+}
+@keyframes amountGlow{
+  0%,100%{filter:drop-shadow(0 0 20px rgba(232,197,71,.3))}
+  50%{filter:drop-shadow(0 0 40px rgba(232,197,71,.55))}
+}
+.amount-sub{margin-top:8px;font-size:.8rem;color:var(--muted);font-weight:500}
+
+.divider{
+  display:flex;align-items:center;gap:12px;margin:18px 0 16px;
+  color:var(--muted);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
+}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(232,197,71,.35),transparent)}
+
+.sub{color:var(--muted);line-height:1.7;font-size:.92rem;max-width:34ch;margin:0 auto 18px}
+
+.badge{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;
+  border:1px solid rgba(232,197,71,.35);
+  background:linear-gradient(135deg,rgba(232,197,71,.14),rgba(232,197,71,.04));
+  color:var(--gold-light);font-size:.78rem;font-weight:700;margin-bottom:22px;
+}
+.badge .dot{
+  width:7px;height:7px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 10px var(--gold);animation:blink 1.6s ease infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+.btn{
+  width:100%;height:56px;border:0;border-radius:16px;cursor:pointer;
+  font-family:inherit;font-weight:800;font-size:1rem;letter-spacing:.03em;color:#161006;
+  background:linear-gradient(135deg,#fff3b0 0%,#d9ad35 40%,#d4a82e 70%,#b8891a 100%);
+  box-shadow:0 14px 36px rgba(232,197,71,.28),inset 0 1px 0 rgba(255,255,255,.55);
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease;
+  position:relative;overflow:hidden;
+}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.05);box-shadow:0 18px 42px rgba(232,197,71,.38),inset 0 1px 0 rgba(255,255,255,.55)}
+.btn:disabled{opacity:.7;cursor:wait;transform:none}
+.fine{margin-top:16px;font-size:.72rem;color:rgba(181,164,122,.75)}
+
+.ornament{position:absolute;width:36px;height:36px;opacity:.45;pointer-events:none}
+.ornament.tl{top:14px;left:14px;border-top:1.5px solid var(--gold);border-left:1.5px solid var(--gold)}
+.ornament.tr{top:14px;right:14px;border-top:1.5px solid var(--gold);border-right:1.5px solid var(--gold)}
+.ornament.bl{bottom:14px;left:14px;border-bottom:1.5px solid var(--gold);border-left:1.5px solid var(--gold)}
+.ornament.br{bottom:14px;right:14px;border-bottom:1.5px solid var(--gold);border-right:1.5px solid var(--gold)}
+
+@media(max-width:420px){
+  .card{padding:40px 22px 30px}
+  .seal{width:96px;height:96px}
+  .seal span{font-size:1.85rem}
+  .btn{height:52px}
+  .congrats-flash{top:8%;font-size:.85rem;padding:8px 16px}
+}
+</style>
+
+<style id="thomduck-navy-gold-theme">
+:root{--td-navy:#071a3d;--td-navy2:#0b2452;--td-gold:#d9ad35;--td-gold2:#ffc936;--td-white:#fff;--navy:#071a3d;--gold:#d9ad35;--royal:#102a55;--bg:#071a3d;--background:#071a3d;--card:#0b2452;--surface:#0b2452;--text:#fff;--muted:#dce6f7;--border:rgba(217,173,53,.42)}
+html{background:#071a3d!important;color-scheme:dark} body{background-color:#071a3d!important;color:#fff!important} body,main,section,article,header,footer,aside,.container,.content,.page,.dashboard,.main-content{color:#fff} 
+/* Keep photographs and hero artwork, but recolor UI surfaces consistently. */
+:where(.card,.panel,.box,.modal,.popup,.product-card,.stat-card,.balance-card,.form-card,.auth-card,.dashboard-card,.community-card,.activity-popup,.quick-nav,.sidebar,.side-nav,.nav-menu,.menu-panel){background-color:#0b2452!important;color:#fff!important;border-color:rgba(217,173,53,.48)!important}
+:where(h1,h2,h3,h4,h5,h6,label,strong,.title,.brand,.logo-text){color:#fff} :where(p,small,.muted,.subtitle,.description,.text-muted){color:#dce6f7}
+:where(button,.btn,[role=button],input[type=submit],input[type=button],.primary-btn,.cta,.action-btn){border-color:#d9ad35!important}
+:where(button,.btn,input[type=submit],input[type=button],.primary-btn,.cta,.action-btn){background-color:#d9ad35!important;color:#071a3d!important;font-weight:800}
+:where(a,.link){color:#ffc936} :where(input,select,textarea){background:#fff!important;color:#071a3d!important;border-color:#d9ad35!important} :where(input,select,textarea)::placeholder{color:#65718a!important}
+:where(.nav-icon,.nav-item,.quick-nav a,.sidebar a,.side-nav a,.nav-menu a){border-color:rgba(217,173,53,.5)!important} :where(.badge,.tag,.pill,.product-badge){background:#d9ad35!important;color:#071a3d!important}
+/* Main landing page sections */
+.hero,.hero-section,.banner,.welcome-section{color:#fff} .hero :where(h1,h2,p),.hero-section :where(h1,h2,p){color:#fff!important}
+/* Mobile-safe controls */
+button,a,input,select,textarea{accent-color:#d9ad35} ::selection{background:#d9ad35;color:#071a3d}
+</style>
+
+<script defer src="./app.js"></script></head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="sparkle-field" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div id="confetti" aria-hidden="true"></div>
+  <div id="balloons" aria-hidden="true"></div>
+  <div class="congrats-flash" aria-hidden="true">✦ Congratulations ✦</div>
+
+  <main class="wrap">
+    <section class="card">
+      <span class="ornament tl"></span>
+      <span class="ornament tr"></span>
+      <span class="ornament bl"></span>
+      <span class="ornament br"></span>
+
+      <div class="seal">
+        <span class="seal-ring" aria-hidden="true"></span>
+        <span>GF</span>
+      </div>
+
+      <div class="eyebrow">Exclusive Welcome</div>
+      <h1>Welcome to Thomduck</h1>
+      <p class="tagline">A private reward for your first registration</p>
+
+      <div class="amount-box">
+        <div class="amount-label">Welcome Bonus</div>
+        <div class="amount">₦5,000</div>
+        <div class="amount-sub">Already credited to your wallet</div>
+      </div>
+
+      <div class="divider">Premium account</div>
+      <p class="sub">Your first-registration welcome bonus has been added to your available balance. This exclusive screen appears only once.</p>
+      <div class="badge"><span class="dot"></span> First-time bonus confirmed</div>
+
+      <button class="btn" type="button" id="dismiss">Continue to Dashboard</button>
+      <p class="fine">You may continue whenever you are ready</p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+  (function () {
+    /* Full-screen gold balloons — continuous, fills the screen */
+    var balloonColors = [
+      { body: 'radial-gradient(circle at 30% 25%,#fff6c8,#d9ad35 42%,#a67c18)', knot: '#b48618' },
+      { body: 'radial-gradient(circle at 30% 25%,#ffe9a0,#d4a82e 45%,#8f6a12)', knot: '#8f6a12' },
+      { body: 'radial-gradient(circle at 30% 25%,#fff0b8,#f0cf63 40%,#c9a02e)', knot: '#c9a02e' },
+      { body: 'radial-gradient(circle at 30% 25%,#f7e7a0,#d9ad35 50%,#b8891a)', knot: '#b8891a' },
+      { body: 'radial-gradient(circle at 30% 25%,#fff8d0,#ffc936 40%,#d4a01a)', knot: '#d4a01a' }
+    ];
+    var box = document.getElementById('balloons');
+    var count = 22;
+    for (var i = 0; i < count; i++) {
+      var c = balloonColors[i % balloonColors.length];
+      var b = document.createElement('div');
+      b.className = 'balloon';
+      b.style.left = (2 + Math.random() * 96) + '%';
+      b.style.setProperty('--dur', (9 + Math.random() * 10) + 's');
+      b.style.setProperty('--delay', (Math.random() * 8) + 's');
+      b.style.background = c.body;
+      b.style.setProperty('--knot', c.knot);
+      var scale = 0.65 + Math.random() * 0.7;
+      b.style.width = (48 * scale) + 'px';
+      b.style.height = (62 * scale) + 'px';
+      var shine = document.createElement('span');
+      shine.className = 'shine';
+      b.appendChild(shine);
+      box.appendChild(b);
+    }
+
+    /* Confetti */
+    var conf = document.getElementById('confetti');
+    for (var j = 0; j < 42; j++) {
+      var p = document.createElement('span');
+      p.className = 'confetti-piece' + (j % 3 === 0 ? ' circle' : (j % 3 === 1 ? ' thin' : ''));
+      p.style.left = (Math.random() * 100) + '%';
+      p.style.animationDuration = (3.2 + Math.random() * 4.5) + 's';
+      p.style.animationDelay = (Math.random() * 2.2) + 's';
+      conf.appendChild(p);
+    }
+
+    var u = getLoggedUser();
+    if (!u || !u.firstTime) {
+      location.href = 'dashboard.html';
+      return;
+    }
+
+    document.getElementById('dismiss').onclick = async function () {
+      var btn = document.getElementById('dismiss');
+      btn.disabled = true;
+      btn.textContent = 'Opening Dashboard…';
+      try { const r=await tdRequest('/profile/bonus-seen',{method:'POST',body:'{}'});setLoggedUser(r.user); } catch (e) { console.error(e); }
+      location.href = 'dashboard.html';
+    };
+  })();
+  </script>
+</body>
+</html>

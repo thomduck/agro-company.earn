@@ -1,0 +1,6 @@
+const BASE = new URL('./', self.registration.scope);
+const CACHE = 'thomduck-gh-pages-v1';
+const CORE = ['index.html','manifest.json','app.js','site.css','assets/icons/icon-192.png','assets/icons/icon-512.png','assets/icons/icon-180.png','assets/icons/thomduck.svg'].map(p=>new URL(p,BASE).href);
+self.addEventListener('install', event => event.waitUntil((async()=>{const c=await caches.open(CACHE); await Promise.all(CORE.map(async u=>{try{const r=await fetch(u); if(r.ok) await c.put(u,r)}catch(_){}})); await self.skipWaiting()})()));
+self.addEventListener('activate', event => event.waitUntil((async()=>{for(const k of await caches.keys()) if(k.startsWith('thomduck-')&&k!==CACHE) await caches.delete(k); await self.clients.claim()})()));
+self.addEventListener('fetch', event => {const req=event.request; const u=new URL(req.url); if(req.method!=='GET'||u.origin!==self.location.origin||u.pathname.includes('/api/')||u.pathname.includes('/uploads/')) return; event.respondWith((async()=>{try{const res=await fetch(req); if(res.ok){const c=await caches.open(CACHE); c.put(req,res.clone()).catch(()=>{});} return res;}catch(_){const cached=await caches.match(req); if(cached)return cached; if(req.mode==='navigate')return (await caches.match(new URL('index.html',BASE).href))||Response.error(); return Response.error();}})())});
